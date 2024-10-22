@@ -18,12 +18,12 @@ model Workflow_instance {
   urn                   String
   current_step_urn      String
   author_urn            String
-  archived              Boolean
+  archived              Boolean   @default(false)
   completed_at          DateTime?
   created_at            DateTime  @default(now())
   deleted_at            DateTime?
   updated_at            DateTime  @updatedAt
-  cancelled             Boolean
+  cancelled             Boolean   @default(false)
 
   workflow_interface Workflow_interface @relation(fields: [workflow_interface_id], references: [id])
   step_instances     Step_instance[]
@@ -37,18 +37,18 @@ model Step_instance {
   step_event_urn       String
   workflow_instance_id Int
   step_event_id        Int
-  is_main_event        Boolean
+  is_main_event        Boolean   @default(false)
   title                String
   comments             String
   order                Int
   assignee_urn         String
   description          String
-  approvable           Boolean
-  skippable            Boolean
-  cancellable          Boolean
-  approved             Boolean
-  skipped              Boolean
-  cancelled            Boolean
+  approvable           Boolean   @default(false)
+  skippable            Boolean   @default(false)
+  cancellable          Boolean   @default(false)
+  approved             Boolean   @default(false)
+  skipped              Boolean   @default(false)
+  cancelled            Boolean   @default(false)
   created_at           DateTime  @default(now())
   deleted_at           DateTime?
   updated_at           DateTime  @updatedAt
@@ -85,19 +85,19 @@ model Workflow_step {
   workflow_interface_id Int
   step_event_urn        String
   step_event_id         Int
-  is_main_event         Boolean
+  is_main_event         Boolean   @default(false)
   title                 String
   order                 Int
   assignee_urn          String
   description           String
-  approvable            Boolean
-  skippable             Boolean
-  cancellable           Boolean
+  approvable            Boolean   @default(false)
+  skippable             Boolean   @default(false)
+  cancellable           Boolean   @default(false)
   created_at            DateTime  @default(now())
   deleted_at            DateTime?
   updated_at            DateTime  @updatedAt
 
-  workflow_interface Workflow_interface @relation(fields: [workflow_interface_id], references: [id])
+  workflow_interface Workflow_interface @relation(fields: [workflow_interface_id], references: [id], onDelete: Cascade)
   step_event_type    Step_event_type    @relation(fields: [step_event_id], references: [id])
 
   @@map("Workflow_step")
@@ -107,7 +107,7 @@ model Step_event_type {
   id            Int       @id @default(autoincrement())
   slug          String
   name          String
-  is_main_event Boolean
+  is_main_event Boolean   @default(false)
   created_at    DateTime  @default(now())
   deleted_at    DateTime?
   updated_at    DateTime  @updatedAt
