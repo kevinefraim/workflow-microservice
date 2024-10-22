@@ -61,6 +61,7 @@ CREATE TABLE `Workflow_interface` (
     `deleted_at` DATETIME(3) NULL,
     `updated_at` DATETIME(3) NOT NULL,
 
+    UNIQUE INDEX `Workflow_interface_urn_key`(`urn`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -74,7 +75,7 @@ CREATE TABLE `Workflow_step` (
     `is_main_event` BOOLEAN NOT NULL DEFAULT false,
     `title` VARCHAR(191) NOT NULL,
     `order` INTEGER NOT NULL,
-    `assignee_urn` VARCHAR(191) NOT NULL,
+    `assignee_urn` VARCHAR(191) NULL,
     `description` VARCHAR(191) NOT NULL,
     `approvable` BOOLEAN NOT NULL DEFAULT false,
     `skippable` BOOLEAN NOT NULL DEFAULT false,
@@ -83,6 +84,7 @@ CREATE TABLE `Workflow_step` (
     `deleted_at` DATETIME(3) NULL,
     `updated_at` DATETIME(3) NOT NULL,
 
+    UNIQUE INDEX `Workflow_step_urn_key`(`urn`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 

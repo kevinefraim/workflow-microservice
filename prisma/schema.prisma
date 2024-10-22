@@ -61,7 +61,7 @@ model Step_instance {
 
 model Workflow_interface {
   id              Int       @id @default(autoincrement())
-  urn             String
+  urn             String    @unique
   organization_id Int
   group_urn       String
   title           String
@@ -81,14 +81,14 @@ model Workflow_interface {
 
 model Workflow_step {
   id                    Int       @id @default(autoincrement())
-  urn                   String
+  urn                   String    @unique
   workflow_interface_id Int
   step_event_urn        String
   step_event_id         Int
   is_main_event         Boolean   @default(false)
   title                 String
   order                 Int
-  assignee_urn          String
+  assignee_urn          String?
   description           String
   approvable            Boolean   @default(false)
   skippable             Boolean   @default(false)
