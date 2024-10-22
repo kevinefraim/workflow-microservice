@@ -1,0 +1,119 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Workflow_instance {
+  id                    Int       @id @default(autoincrement())
+  workflow_interface_id Int
+  organization_id       Int
+  group_urn             String
+  title                 String
+  subtitle              String
+  description           String
+  urn                   String
+  current_step_urn      String
+  author_urn            String
+  archived              Boolean
+  completed_at          DateTime?
+  created_at            DateTime  @default(now())
+  deleted_at            DateTime?
+  updated_at            DateTime  @updatedAt
+  cancelled             Boolean
+
+  workflow_interface Workflow_interface @relation(fields: [workflow_interface_id], references: [id])
+  step_instances     Step_instance[]
+
+  @@map("Workflow_instance")
+}
+
+model Step_instance {
+  id                   Int       @id @default(autoincrement())
+  urn                  String
+  step_event_urn       String
+  workflow_instance_id Int
+  step_event_id        Int
+  is_main_event        Boolean
+  title                String
+  comments             String
+  order                Int
+  assignee_urn         String
+  description          String
+  approvable           Boolean
+  skippable            Boolean
+  cancellable          Boolean
+  approved             Boolean
+  skipped              Boolean
+  cancelled            Boolean
+  created_at           DateTime  @default(now())
+  deleted_at           DateTime?
+  updated_at           DateTime  @updatedAt
+
+  workflow_instance Workflow_instance @relation(fields: [workflow_instance_id], references: [id])
+  step_event_type   Step_event_type   @relation(fields: [step_event_id], references: [id])
+
+  @@map("Step_instance")
+}
+
+model Workflow_interface {
+  id              Int       @id @default(autoincrement())
+  urn             String
+  organization_id Int
+  group_urn       String
+  title           String
+  subtitle        String
+  description     String
+  author_urn      String
+  activated_at    DateTime?
+  created_at      DateTime  @default(now())
+  deleted_at      DateTime?
+  updated_at      DateTime  @updatedAt
+
+  workflow_steps     Workflow_step[]
+  workflow_instances Workflow_instance[]
+
+  @@map("Workflow_interface")
+}
+
+model Workflow_step {
+  id                    Int       @id @default(autoincrement())
+  urn                   String
+  workflow_interface_id Int
+  step_event_urn        String
+  step_event_id         Int
+  is_main_event         Boolean
+  title                 String
+  order                 Int
+  assignee_urn          String
+  description           String
+  approvable            Boolean
+  skippable             Boolean
+  cancellable           Boolean
+  created_at            DateTime  @default(now())
+  deleted_at            DateTime?
+  updated_at            DateTime  @updatedAt
+
+  workflow_interface Workflow_interface @relation(fields: [workflow_interface_id], references: [id])
+  step_event_type    Step_event_type    @relation(fields: [step_event_id], references: [id])
+
+  @@map("Workflow_step")
+}
+
+model Step_event_type {
+  id            Int       @id @default(autoincrement())
+  slug          String
+  name          String
+  is_main_event Boolean
+  created_at    DateTime  @default(now())
+  deleted_at    DateTime?
+  updated_at    DateTime  @updatedAt
+
+  step_instances Step_instance[]
+  workflow_steps Workflow_step[]
+
+  @@map("Step_event_type")
+}
