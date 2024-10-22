@@ -4,6 +4,11 @@
 /build
 /.vscode
 /.serverless
+/serverless
+.serverless
+.serverless
+.serverless/*
+!.serverless/workflow-microservice.zip
 
 # Logs
 logs
